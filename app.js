@@ -81,13 +81,32 @@ Incrementer.defaultProps = {
     step: 1,
 }
 
+class ManualIncrement extends React.Component{
+
+    constructor(props){
+        super(props)
+        this.state = {n: 0}
+    }
+
+    increment(e){
+        e.preventDefault()
+
+        this.setState(function (state, props) {
+            return {n: state.n + 1}
+        })
+    }
+
+    render(){
+        return <div>Valeur: {this.state.n} <button onClick={this.increment.bind(this)}>Incrémenter</button></div>
+    }
+
+}
+
 function Home() {
     return <div>
         <Welcome name="Jean"/>
         <Welcome name="theo"/>
-        <Clok/>
-        <Incrementer start={10}/>
-        <Incrementer start={100} step={10}/>
+        <ManualIncrement/>
     </div>
 }
 
