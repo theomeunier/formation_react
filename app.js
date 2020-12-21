@@ -1,127 +1,45 @@
-function WelcomeFunc({name, children}) {
-    return <div>
-        <h1>bonjour {name}</h1>
-        <p>
-            {children}
-        </p>
-    </div>
-}
-
-class Welcome extends React.Component {
-
-    render() {
-        return <div>
-            <h1>Bonjours {this.props.name}</h1>
-            <p>
-                {this.props.children}
-            </p>
-        </div>
-    }
-}
-
-class Clok extends React.Component {
+class Home extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {date: new Date()}
-        this.timer = null
+        this.state = {
+            nom: '',
+            prenom: '',
+            newsletter: false
+        }
+        this.handleChange = this.handleChange.bind(this)
     }
 
-    componentDidMount() {
-        this.timer = window.setInterval(() => {
-            this.tick.bind(this)
-        }, 1000)
-    }
-
-    componentWillUnmount() {
-        window.clearInterval(this.timer)
-    }
-
-    tick() {
-        this.setState({date: new Date})
+    handleChange(e) {
+        const name = e.target.name
+        const type = e.target.type
+        const value = type === 'checkbox' ? e.target.checked : e.target.value
+        this.setState({
+            [name]: value
+        })
     }
 
     render() {
-        const date = new Date()
         return <div>
-            Il est {this.state.date.toLocaleDateString()} {this.state.date.toLocaleTimeString()}
+            <div>
+                <label htmlFor="nom">nom</label>
+                <input type="text" id="nom" name="nom" value={this.state.nom} onChange={this.handleChange}/>
+            </div>
+            <div>
+                <label htmlFor="prenom">Prenom</label>
+                <input type="text" id="prenom" name="prenom" value={this.state.prenom} onChange={this.handleChange}/>
+            </div>
+            <div>
+                <label htmlFor="newsletter">S'abonner a la newsletter</label>
+                <input type="checkbox" checked={this.state.newsletter} value={this.state.newsletter}
+                       onChange={this.handleChange} id="newsletter" name="newsletter"/>
+            </div>
+            <div>
+                <input type="text" defaultValue={undefined}/>
+            </div>
+            {JSON.stringify(this.state)}
         </div>
     }
-}
-
-class Incrementer extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {n: props.start, timer: null}
-        this.toggle = this.toggle.bind(this)
-        this.reset = this.reset.bind(this)
-    }
-
-    componentDidMount() {
-        this.play()
-    }
-
-    componentWillUnmount() {
-        window.clearInterval(this.state.timer)
-    }
-
-    increment() {
-        this.setState(function (state, props) {
-            return {n: state.n + props.step}
-        })
-    }
-
-    pause() {
-        window.clearInterval(this.state.timer)
-        this.setState({
-            timer : null
-        })
-    }
-
-    play() {
-        window.clearInterval(this.state.timer)
-        this.setState({
-            timer : window.setInterval(this.increment.bind(this), 1000)
-        })
-    }
-
-    toggle(){
-        return this.state.timer ? this.pause() : this.play()
-    }
-
-    label (){
-        return this.state.timer ? 'Pause' : 'Lecture'
-    }
-
-    reset(){
-        this.pause()
-        this.play()
-        this.setState((state, props) => ({n: props.start}))
-    }
-
-    //le render est appeler tout le temps
-    render() {
-        return <div>
-            Valeur : {this.state.n}
-            <button onClick={this.toggle}>{this.label()}</button>
-            <button onClick={this.reset}>Réinitialiser</button>
-        </div>
-    }
-}
-
-Incrementer.defaultProps = {
-    start: 0,
-    step: 1,
-}
-
-
-function Home() {
-    return <div>
-        <Welcome name="Jean"/>
-        <Welcome name="theo"/>
-        <Incrementer/>
-    </div>
 }
 
 ReactDOM.render(<Home/>, document.querySelector('#app'))
